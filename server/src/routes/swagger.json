@@ -1,0 +1,439 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "ArcadeMania API Documentation",
+        "version": "1.0.0",
+        "title": "ArcadeMania API"
+    },
+    "basePath": "/api/v1",
+    "schemes": [
+        "http"
+    ],
+    "securityDefinitions": {
+        "bearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Enter the token with the `Bearer: ` prefix, e.g. 'Bearer abcde12345'."
+        }
+    },
+    "paths": {
+        "/auth/signup": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Create user",
+                "description": "Creates an user for logging in to the application",
+                "operationId": "createUser",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "User object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User created successfully to login"
+                    },
+                    "500": {
+                        "description": "User couldn't be created"
+                    }
+                }
+            }
+        },
+        "/auth/signin": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "User Login",
+                "description": "login in an user in to the application",
+                "operationId": "User",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Login object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User logged In successfully"
+                    },
+                    "500": {
+                        "description": "User couldn't be loggedIn"
+                    }
+                }
+            }
+        },
+        "/auth/getAllUsers" : {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get all users",
+                "description": "Retrieves all users from the database",
+                "operationId": "getAllUsers",
+                "produces": [
+                    "application/json"
+                ],
+                
+                "responses": {
+                    "200": {
+                        "description": "All users information are retrieved successfully"
+                    },
+                    "500": {
+                        "description": "Cannot fetch users details"
+                    }
+                }
+            }
+        },
+        "/auth/deleteUser/{emailId}" : {
+            "delete": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Delete a user",
+                "description": "Deletes a user from the database using email address",
+                "operationId": "deleteUserByEmail",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "emailId",
+                        "description": "The email address of the user",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully"
+                    },
+                    "500": {
+                        "description": "Cannot remove user"
+                    }
+                }
+            }
+        },
+        "/leaderboard": {
+            "get": {
+                "tags": [
+                    "Leaderboard"
+                ],
+                "summary": "Get Global Leaderboard",
+                "description": "Gets the Global leaderboard data",
+                "operationId": "getGlobalLeaderboard",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Global Leaderboard Data"
+                    },
+                    "500": {
+                        "description": "Cannot get global leaderboard data"
+                    }
+                }
+            }
+        },
+        "/leaderboard/{id}": {
+            "get": {
+                "tags": [
+                    "Leaderboard"
+                ],
+                "summary": "Get Game Specific Leaderboard",
+                "description": "Gets the leaderboard data for given game",
+                "operationId": "getLeaderboard",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Game Id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Game Leaderboard Data"
+                    },
+                    "500": {
+                        "description": "Cannot get game leaderboard data"
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Leaderboard"
+                ],
+                "summary": "Save the score for the given game",
+                "description": "Save the score for the given game",
+                "operationId": "saveScore",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Game Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Score object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Score"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If the save was succesful"
+                    },
+                    "500": {
+                        "description": "Cannot save game leaderboard data"
+                    }
+                }
+            }
+        },
+        "/favourites": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Favourites"
+                ],
+                "summary": "Get User Favourites",
+                "description": "Gets the User specific favourite games",
+                "operationId": "getUserFavourites",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User Favourite games"
+                    },
+                    "500": {
+                        "description": "If the operation fails"
+                    }
+                }
+            }
+        },
+        "/favourites/{id}": {
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Favourites"
+                ],
+                "summary": "Set the game as user Favourites",
+                "description": "Set the game as user Favourites",
+                "operationId": "setUserFavourites",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Game Id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If the game was set as favourite for the user sucessfully"
+                    },
+                    "500": {
+                        "description": "Cannot set user favourites"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Favourites"
+                ],
+                "summary": "Remove the game as user Favourites",
+                "description": "Remove the game as user Favourites",
+                "operationId": "removeUserFavourites",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Game Id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If the game was not removed as favourite for the user sucessfully"
+                    },
+                    "500": {
+                        "description": "Cannot remove user favourites"
+                    }
+                }
+            }
+        },
+        "/userpreferences": {
+            "get": {
+                "tags": [
+                    "User Preferences"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Get User Preferences",
+                "description": "Gets the user preferences like recently played and theme data",
+                "operationId": "getUserPreferences",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User Preferences Data"
+                    },
+                    "500": {
+                        "description": "Cannot get user preferences data"
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "User Preferences"
+                ],
+                "summary": "Set User Preferences",
+                "description": "Sets the user preferences like recently played and theme data",
+                "operationId": "setUserPreferences",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "User Preferences",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserPreferences"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If the save was succesful"
+                    },
+                    "500": {
+                        "description": "Cannot save user preferences"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              }
+            }
+          },
+          "Users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/User"
+            }
+          },
+        "Login": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "Score": {
+            "type": "object",
+            "properties": {
+                "score": {
+                    "type": "number"
+                }
+            }
+        },
+        "UserPreferences" : {
+            "type": "object",
+            "properties": {
+                "theme": {
+                    "type": "string"
+                },
+                "recentlyPlayed": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
+                    }
+                }
+            }
+        }
+    }
+}
